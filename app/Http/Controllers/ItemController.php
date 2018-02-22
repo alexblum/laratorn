@@ -9,15 +9,14 @@ class ItemController extends Controller
 {
     public function index($searchQuery = null)
     {
-        $responseSearchQuery = null;
+        $responseSearchQuery = $searchQuery;
         if (intval($searchQuery) > 0) {
-            $items = Item::find($searchQuery)
-                ->get();
+            $items = [Item::find($searchQuery)];
         } else if ($searchQuery !== null) {
-            $responseSearchQuery = $searchQuery;
             $items = Item::where('name', 'like', '%' . $searchQuery . '%')
                 ->get();
         } else {
+            $responseSearchQuery = '';
             $items = Item::limit(25)
                 ->get();
         }

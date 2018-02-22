@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="has-navbar-fixed-top">
 <head>
     <meta charset="UTF-8">
     <title>@yield('title')</title>
@@ -10,9 +10,10 @@
         Navbar
     @endcomponent
 
-    <div class="container">
+    <div class="container is-widescreen" id="app">
         @yield('content')
     </div>
 
+    <script src="{{ mix('js/app.js') }}"></script>
 </body>
 </html>

@@ -10,3 +10,12 @@
 
 // Font awesome
 @import '~font-awesome/css/font-awesome.min.css';
+
+.is-shadow-bottom {
+  box-shadow: 0 1px 1px -1px grey;
+}
+
+.container {
+  padding-bottom: 20px;
+  padding-top: 20px;
+}

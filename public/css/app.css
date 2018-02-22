@@ -11511,3 +11511,13 @@ label.panel-block:hover {
   padding: 3rem 1.5rem 6rem;
 }
 
+.is-shadow-bottom {
+  -webkit-box-shadow: 0 1px 1px -1px grey;
+          box-shadow: 0 1px 1px -1px grey;
+}
+
+.container {
+  padding-bottom: 20px;
+  padding-top: 20px;
+}
+

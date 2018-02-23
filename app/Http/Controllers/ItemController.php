@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 
 class ItemController extends Controller
 {
+    /**
+     * @param null $searchQuery
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index($searchQuery = null)
     {
         $responseSearchQuery = $searchQuery;
@@ -29,11 +33,19 @@ class ItemController extends Controller
         return view('items', $pageData);
     }
 
+    /**
+     * @param null $searchQuery
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function indexvue($searchQuery = null)
     {
         return view('itemsvue', [$searchQuery]);
     }
 
+    /**
+     * @param null $searchQuery
+     * @return array
+     */
     public function indexjson($searchQuery = null)
     {
         $responseSearchQuery = $searchQuery;
@@ -55,6 +67,10 @@ class ItemController extends Controller
         return $pageData;
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function search(Request $request)
     {
         return $this->index($request->searchQuery);

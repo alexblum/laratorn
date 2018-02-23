@@ -21,3 +21,4 @@ Route::post('/items', 'ItemController@search');
 Route::get('/itemsvue', 'ItemController@indexvue');
 Route::get('/api/items', 'ItemController@indexjson');
 Route::get('/api/items/{searchQuery}', 'ItemController@indexjson');
+Route::get('/api/item/{itemId}', 'ItemViewController@index');

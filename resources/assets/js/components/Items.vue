@@ -24,7 +24,7 @@
             </thead>
             <tbody>
             <tr v-for="item in items">
-                <td>{{ item.id }}</td>
+                <td @click="showDetails(item.id)">{{ item.id }}</td>
                 <td>{{ item.name }}</td>
                 <td :title="item.description">{{ item.description.length > 70 ? item.description.slice(0, 69) + ' ...' : item.description }}</td>
                 <td>{{ item.type }}</td>
@@ -43,6 +43,12 @@
         <div class="columns" v-else>
             <div class="column has-text-centered"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></div>
         </div>
+
+        <item-view
+                :itemId="selectedItemId"
+                :show="showModal"
+                @close="closeDetails">
+        </item-view>
     </div>
 </template>
 
@@ -57,7 +63,9 @@
                 searchQuery: '',
                 ajaxLoading: false,
                 sortedBy: '',
-                sortedOrder: ''
+                sortedOrder: '',
+                showModal: false,
+                selectedItemId: 0
             };
         },
 
@@ -112,6 +120,16 @@
                         return o1[key] > o2[key] ? -1 : 1;
                     }
                 });
+            },
+
+            showDetails(itemId) {
+                this.selectedItemId = itemId;
+                this.showModal = true;
+            },
+
+            closeDetails() {
+                this.selectedItemId = 0;
+                this.showModal = false;
             }
         }
     }

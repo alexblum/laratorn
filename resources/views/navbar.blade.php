@@ -1,14 +1,8 @@
 <nav class="navbar is-fixed-top is-shadow-bottom" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
         <a class="navbar-item" href="https://www.torn.com">
-            <img src="https://bulma.io/images/bulma-logo.png" alt="Bulma: a modern CSS framework based on Flexbox" width="112" height="28">
+            <img src="https://lipstickdigitalmarketing.com.au/wp-content/uploads/Logo-Designs.png" height="28">
         </a>
-
-        <div class="navbar-burger">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
     </div>
     <div id="navbarExampleTransparentExample" class="navbar-menu">
         <div class="navbar-start">

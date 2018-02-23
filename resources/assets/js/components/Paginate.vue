@@ -1,5 +1,5 @@
 <template>
-    <nav class="pagination is-right" role="navigation" aria-label="pagination">
+    <nav class="pagination is-right" role="navigation" aria-label="pagination" v-show="shouldShow()">
         <a @click="prevPage()" class="pagination-previous" :disabled="firstPageSelected()">Previous</a>
         <a @click="nextPage()" class="pagination-next" :disabled="lastPageSelected()">Next page</a>
 
@@ -169,6 +169,9 @@
                 this.selected = this.pageCount - 1
 
                 this.clickHandler(this.selected)
+            },
+            shouldShow() {
+                return this.pageCount > 1
             }
         }
     }

@@ -13079,17 +13079,21 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(61)
+}
 var normalizeComponent = __webpack_require__(9)
 /* script */
 var __vue_script__ = __webpack_require__(35)
 /* template */
-var __vue_template__ = __webpack_require__(36)
+var __vue_template__ = __webpack_require__(63)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
-var __vue_styles__ = null
+var __vue_styles__ = injectStyle
 /* scopeId */
-var __vue_scopeId__ = null
+var __vue_scopeId__ = "data-v-6e5edfce"
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
@@ -13166,13 +13170,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
             items: [],
             pageCount: 1,
-            endpoint: 'api/items?page='
+            endpoint: 'api/items/',
+            searchQuery: '',
+            ajaxLoading: false,
+            sortedBy: '',
+            sortedOrder: ''
         };
     },
     created: function created() {
@@ -13180,137 +13197,67 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
 
+    computed: {
+        sortedClass: function sortedClass() {
+            var result = '';
+            if (this.sortedOrder === 'asc') {
+                result = 'fa-sort-alpha-asc';
+            } else {
+                result = 'fa-sort-alpha-desc';
+            }
+            return result;
+        }
+    },
+
     methods: {
         fetch: function fetch() {
             var _this = this;
 
             var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
 
-            axios.get(this.endpoint + page).then(function (_ref) {
+            this.ajaxLoading = true;
+            axios.get(this.endpoint, { params: { page: page } }).then(function (_ref) {
                 var data = _ref.data;
 
                 _this.items = data.items.data;
                 _this.pageCount = data.items.last_page;
+                _this.ajaxLoading = false;
+            });
+        },
+        doSearch: function doSearch() {
+            var _this2 = this;
+
+            if (this.searchQuery.length) {
+                this.ajaxLoading = true;
+                this.sortedBy = '';
+                this.sortedOrder = '';
+                axios.get(this.endpoint + this.searchQuery).then(function (_ref2) {
+                    var data = _ref2.data;
+
+                    _this2.items = data.items.data;
+                    _this2.pageCount = data.items.last_page;
+                    _this2.ajaxLoading = false;
+                });
+            }
+        },
+        sortItemsBy: function sortItemsBy(key) {
+            var _this3 = this;
+
+            this.sortedBy = key;
+            this.sortedOrder = this.sortedOrder === 'asc' ? 'desc' : 'asc';
+            this.items.sort(function (o1, o2) {
+                if (_this3.sortedOrder === 'asc') {
+                    return o1[key] > o2[key] ? 1 : -1;
+                } else {
+                    return o1[key] > o2[key] ? -1 : 1;
+                }
             });
         }
     }
 });
 
 /***/ }),
-/* 36 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _vm.items.length
-        ? _c(
-            "table",
-            {
-              staticClass: "table is-hoverable is-striped is-fullwidth",
-              attrs: { id: "items" }
-            },
-            [
-              _vm._m(0),
-              _vm._v(" "),
-              _c(
-                "tbody",
-                _vm._l(_vm.items, function(item) {
-                  return _c("tr", [
-                    _c("td", [_vm._v(_vm._s(item.id))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(item.name))]),
-                    _vm._v(" "),
-                    _c("td", { attrs: { title: item.description } }, [
-                      _vm._v(
-                        _vm._s(
-                          item.description.length > 70
-                            ? item.description.slice(0, 69) + " ..."
-                            : item.description
-                        )
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(item.type))]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "has-text-right" }, [
-                      _vm._v(_vm._s(item.buy_price))
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "has-text-right" }, [
-                      _vm._v(_vm._s(item.sell_price))
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "has-text-right" }, [
-                      _vm._v(_vm._s(item.market_value))
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "has-text-right" }, [
-                      _vm._v(_vm._s(item.circulation))
-                    ])
-                  ])
-                })
-              )
-            ]
-          )
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.items.length
-        ? _c("paginate", {
-            attrs: { "page-count": _vm.pageCount, "click-handler": _vm.fetch }
-          })
-        : _c("div", { staticClass: "columns" }, [
-            _c("div", { staticClass: "column has-text-centered" }, [
-              _c("i", {
-                staticClass: "fa fa-spinner fa-spin",
-                attrs: { "aria-hidden": "true" }
-              })
-            ])
-          ])
-    ],
-    1
-  )
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", [_vm._v("ID")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Name")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Description")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Type")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Buy price")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Sell price")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Market value")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Circulation")])
-      ])
-    ])
-  }
-]
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-6e5edfce", module.exports)
-  }
-}
-
-/***/ }),
+/* 36 */,
 /* 37 */,
 /* 38 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -14045,6 +13992,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.selected = this.pageCount - 1;
 
             this.clickHandler(this.selected);
+        },
+        shouldShow: function shouldShow() {
+            return this.pageCount > 1;
         }
     }
 });
@@ -14060,6 +14010,14 @@ var render = function() {
   return _c(
     "nav",
     {
+      directives: [
+        {
+          name: "show",
+          rawName: "v-show",
+          value: _vm.shouldShow(),
+          expression: "shouldShow()"
+        }
+      ],
       staticClass: "pagination is-right",
       attrs: { role: "navigation", "aria-label": "pagination" }
     },
@@ -14129,6 +14087,299 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-4529c22e", module.exports)
+  }
+}
+
+/***/ }),
+/* 61 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(62);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(57)("4e918dda", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-6e5edfce\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Items.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-6e5edfce\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Items.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 62 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(43)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.pointed[data-v-6e5edfce] {\n    cursor: pointer;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 63 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c("div", { staticClass: "field has-addons" }, [
+        _c("div", { staticClass: "control" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model.lazy",
+                value: _vm.searchQuery,
+                expression: "searchQuery",
+                modifiers: { lazy: true }
+              }
+            ],
+            staticClass: "input",
+            attrs: { type: "text", placeholder: "Item name / ID" },
+            domProps: { value: _vm.searchQuery },
+            on: {
+              keyup: function($event) {
+                if (!("button" in $event) && $event.keyCode !== 13) {
+                  return null
+                }
+                _vm.doSearch($event)
+              },
+              change: function($event) {
+                _vm.searchQuery = $event.target.value
+              }
+            }
+          })
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "control" }, [
+          _c(
+            "button",
+            {
+              class: [
+                "button",
+                "is-primary",
+                _vm.ajaxLoading ? "is-loading" : ""
+              ],
+              attrs: { type: "submit" },
+              on: { click: _vm.doSearch }
+            },
+            [_vm._v("Search")]
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _vm.items.length
+        ? _c(
+            "table",
+            {
+              staticClass: "table is-hoverable is-striped is-fullwidth",
+              attrs: { id: "items" }
+            },
+            [
+              _c("thead", [
+                _c("tr", [
+                  _c("th", [_vm._v("ID")]),
+                  _vm._v(" "),
+                  _c("th", [_vm._v("Name")]),
+                  _vm._v(" "),
+                  _c("th", [_vm._v("Description")]),
+                  _vm._v(" "),
+                  _c("th", [_vm._v("Type")]),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    {
+                      staticClass: "pointed",
+                      on: {
+                        click: function($event) {
+                          _vm.sortItemsBy("buy_price")
+                        }
+                      }
+                    },
+                    [
+                      _vm._v("Buy price "),
+                      _c("i", {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.sortedBy === "buy_price",
+                            expression: "sortedBy === 'buy_price'"
+                          }
+                        ],
+                        class: ["fa", _vm.sortedClass],
+                        attrs: { "aria-hidden": "true" }
+                      })
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    {
+                      staticClass: "pointed",
+                      on: {
+                        click: function($event) {
+                          _vm.sortItemsBy("sell_price")
+                        }
+                      }
+                    },
+                    [
+                      _vm._v("Sell price "),
+                      _c("i", {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.sortedBy === "sell_price",
+                            expression: "sortedBy === 'sell_price'"
+                          }
+                        ],
+                        class: ["fa", _vm.sortedClass],
+                        attrs: { "aria-hidden": "true" }
+                      })
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    {
+                      staticClass: "pointed",
+                      on: {
+                        click: function($event) {
+                          _vm.sortItemsBy("market_value")
+                        }
+                      }
+                    },
+                    [
+                      _vm._v("Market value "),
+                      _c("i", {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.sortedBy === "market_value",
+                            expression: "sortedBy === 'market_value'"
+                          }
+                        ],
+                        class: ["fa", _vm.sortedClass],
+                        attrs: { "aria-hidden": "true" }
+                      })
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "th",
+                    {
+                      staticClass: "pointed",
+                      on: {
+                        click: function($event) {
+                          _vm.sortItemsBy("circulation")
+                        }
+                      }
+                    },
+                    [
+                      _vm._v("Circulation "),
+                      _c("i", {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.sortedBy === "circulation",
+                            expression: "sortedBy === 'circulation'"
+                          }
+                        ],
+                        class: ["fa", _vm.sortedClass],
+                        attrs: { "aria-hidden": "true" }
+                      })
+                    ]
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.items, function(item) {
+                  return _c("tr", [
+                    _c("td", [_vm._v(_vm._s(item.id))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(item.name))]),
+                    _vm._v(" "),
+                    _c("td", { attrs: { title: item.description } }, [
+                      _vm._v(
+                        _vm._s(
+                          item.description.length > 70
+                            ? item.description.slice(0, 69) + " ..."
+                            : item.description
+                        )
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(item.type))]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "has-text-right" }, [
+                      _vm._v(_vm._s(item.buy_price))
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "has-text-right" }, [
+                      _vm._v(_vm._s(item.sell_price))
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "has-text-right" }, [
+                      _vm._v(_vm._s(item.market_value))
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "has-text-right" }, [
+                      _vm._v(_vm._s(item.circulation))
+                    ])
+                  ])
+                })
+              )
+            ]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.items.length
+        ? _c("paginate", {
+            attrs: { "page-count": _vm.pageCount, "click-handler": _vm.fetch }
+          })
+        : _c("div", { staticClass: "columns" }, [
+            _c("div", { staticClass: "column has-text-centered" }, [
+              _c("i", {
+                staticClass: "fa fa-spinner fa-spin",
+                attrs: { "aria-hidden": "true" }
+              })
+            ])
+          ])
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-6e5edfce", module.exports)
   }
 }
 

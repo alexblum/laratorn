@@ -17,3 +17,6 @@ Route::get('/', function () {
 Route::get('/items', 'ItemController@index');
 Route::get('/items/{searchQuery}', 'ItemController@index');
 Route::post('/items', 'ItemController@search');
+
+Route::get('/itemsvue', 'ItemController@indexvue');
+Route::get('/api/items', 'ItemController@indexjson');

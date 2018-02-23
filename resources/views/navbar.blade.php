@@ -18,6 +18,9 @@
             <a class="navbar-item" href="/items">
                 Items
             </a>
+            <a class="navbar-item" href="/itemsvue">
+                Items Vue
+            </a>
             <div class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link" href="/documentation/overview/start/">
                     Docs

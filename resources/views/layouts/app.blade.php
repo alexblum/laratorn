@@ -10,7 +10,7 @@
         Navbar
     @endcomponent
 
-    <div class="container is-widescreen" id="app">
+    <div id="app">
         @yield('content')
     </div>
 

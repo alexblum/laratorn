@@ -5,6 +5,9 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
+window.axios = require('axios');
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
 window.Vue = require('vue');
 
 /**
@@ -13,6 +16,8 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+Vue.component('items', require('./components/Items'));
+Vue.component('paginate', require('./components/Paginate'));
 Vue.component('item-view', require('./components/ItemView'));
 
 const app = new Vue({

@@ -46,17 +46,28 @@ class ItemController extends Controller
      * @param null $searchQuery
      * @return array
      */
-    public function indexjson($searchQuery = null)
+    public function indexjson(Request $request, $searchQuery = null)
     {
+        $orderBy = $request->input('sortby');
+        if (empty($orderBy)) {
+            $orderBy = 'id';
+        }
+
+        $order = $request->input('sortorder');
+        if (empty($order)) {
+            $order = 'asc';
+        }
+
         $responseSearchQuery = $searchQuery;
         if (intval($searchQuery) > 0) {
             $items = [Item::find($searchQuery)];
         } else if ($searchQuery !== null) {
             $items = Item::where('name', 'like', '%' . $searchQuery . '%')
+                ->orderBy($orderBy, $order)
                 ->paginate(15);
         } else {
             $responseSearchQuery = '';
-            $items = Item::paginate(15);
+            $items = Item::orderBy($orderBy, $order)->paginate(15);
         }
 
         $pageData = [

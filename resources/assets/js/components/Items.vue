@@ -23,8 +23,8 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="item in items">
-                <td @click="showDetails(item.id)">{{ item.id }}</td>
+            <tr class="pointed" v-for="item in items" @click="showDetails(item.id)">
+                <td>{{ item.id }}</td>
                 <td>{{ item.name }}</td>
                 <td :title="item.description">{{ item.description.length > 70 ? item.description.slice(0, 69) + ' ...' : item.description }}</td>
                 <td>{{ item.type }}</td>
@@ -35,10 +35,11 @@
             </tr>
             </tbody>
         </table>
+
         <paginate
                 v-if="items.length"
                 :page-count="pageCount"
-                :click-handler="fetch">
+                :click-handler="doSearch">
         </paginate>
         <div class="columns" v-else>
             <div class="column has-text-centered"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></div>
@@ -70,7 +71,7 @@
         },
 
         created() {
-            this.fetch();
+            this.doSearch();
         },
 
         computed: {
@@ -86,40 +87,26 @@
         },
 
         methods: {
-            fetch(page = 1) {
+
+            doSearch(page = 1) {
+                let url = this.endpoint;
+                if (this.searchQuery.length > 0) {
+                    url += this.searchQuery;
+                }
+
                 this.ajaxLoading = true;
-                axios.get(this.endpoint, {params: {page: page}})
+                axios.get(url, {params: {page: page, sortby: this.sortedBy, sortorder: this.sortedOrder}})
                     .then(({data}) => {
                         this.items = data.items.data;
                         this.pageCount = data.items.last_page;
                         this.ajaxLoading = false;
-                });
-            },
-
-            doSearch() {
-                if (this.searchQuery.length) {
-                    this.ajaxLoading = true;
-                    this.sortedBy = '';
-                    this.sortedOrder = '';
-                    axios.get(this.endpoint + this.searchQuery)
-                        .then(({data}) => {
-                            this.items = data.items.data;
-                            this.pageCount = data.items.last_page;
-                            this.ajaxLoading = false;
-                        });
-                }
+                    });
             },
 
             sortItemsBy(key) {
                 this.sortedBy = key;
                 this.sortedOrder = this.sortedOrder === 'asc' ? 'desc' : 'asc';
-                this.items.sort((o1, o2) => {
-                    if (this.sortedOrder === 'asc') {
-                        return o1[key] > o2[key] ? 1 : -1;
-                    } else {
-                        return o1[key] > o2[key] ? -1 : 1;
-                    }
-                });
+                this.doSearch();
             },
 
             showDetails(itemId) {

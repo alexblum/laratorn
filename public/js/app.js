@@ -14505,7 +14505,7 @@ exports = module.exports = __webpack_require__(3)(false);
 
 
 // module
-exports.push([module.i, "\n.image[data-v-5640f58f] {\n    width: 100px;\n}\n", ""]);
+exports.push([module.i, "\n.image[data-v-5640f58f] {\n    width: 100px;\n}\n.media[data-v-5640f58f] {\n    margin-bottom: 5px;\n}\n.media-content[data-v-5640f58f] {\n    overflow: hidden;\n}\n", ""]);
 
 // exports
 
@@ -14542,13 +14542,36 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
             endpoint: 'api/item/',
             item: [],
-            market: []
+            market: [],
+            showBazaar: true
         };
     },
 
@@ -14564,11 +14587,44 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.loadItem();
             }
             return this.show;
+        },
+        bazaarItems: function bazaarItems() {
+            if (this.market.bazaar !== null) {
+                var items = Object.values(this.market.bazaar);
+                items.sort(function (a, b) {
+                    return a.cost - b.cost;
+                });
+                return items.slice(0, 9);
+            }
+            return [];
+        },
+        marketItems: function marketItems() {
+            if (this.market.itemmarket !== null) {
+                var items = Object.values(this.market.itemmarket);
+                items.sort(function (a, b) {
+                    return a.cost - b.cost;
+                });
+                return items.slice(0, 9);
+            }
+            return [];
+        }
+    },
+
+    filters: {
+        currency: function currency(value) {
+            var formatter = new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0
+            });
+            return formatter.format(value);
         }
     },
 
     methods: {
         close: function close() {
+            this.item = [];
+            this.market = [];
             this.$emit('close');
         },
         loadItem: function loadItem() {
@@ -14577,7 +14633,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.get(this.endpoint + this.itemId).then(function (_ref) {
                 var data = _ref.data;
 
-                console.log(data);
                 _this.item = data.info;
                 _this.market = data.market;
             });
@@ -14611,15 +14666,118 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("section", { staticClass: "modal-card-body" }, [
-        _c("div", { staticClass: "media" }, [
-          _c("div", { staticClass: "media-left" }, [
-            _c("figure", { staticClass: "image" }, [
-              _c("img", { attrs: { src: _vm.item.image } })
+        _vm.item.id > 0
+          ? _c("div", { staticClass: "media" }, [
+              _c("div", { staticClass: "media-left" }, [
+                _c("figure", { staticClass: "image" }, [
+                  _c("img", { attrs: { src: _vm.item.image } })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "media-content" }, [
+                _c("p", {
+                  staticClass: "subtitle is-6",
+                  domProps: { textContent: _vm._s(_vm.item.description) }
+                })
+              ])
             ])
-          ]),
-          _vm._v(" "),
-          _vm._m(0)
-        ])
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.item.id > 0
+          ? _c("div", [
+              _c("div", { staticClass: "tabs is-fullwidth is-small" }, [
+                _c("ul", [
+                  _c(
+                    "li",
+                    { class: { "is-active": _vm.showBazaar === true } },
+                    [
+                      _c(
+                        "a",
+                        {
+                          on: {
+                            click: function($event) {
+                              _vm.showBazaar = true
+                            }
+                          }
+                        },
+                        [_vm._v("Bazaar")]
+                      )
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "li",
+                    { class: { "is-active": _vm.showBazaar === false } },
+                    [
+                      _c(
+                        "a",
+                        {
+                          on: {
+                            click: function($event) {
+                              _vm.showBazaar = false
+                            }
+                          }
+                        },
+                        [_vm._v("Market")]
+                      )
+                    ]
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c(
+                "table",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.showBazaar,
+                      expression: "showBazaar"
+                    }
+                  ],
+                  staticClass: "table is-hoverable is-striped is-fullwidth"
+                },
+                _vm._l(_vm.bazaarItems, function(bazaar) {
+                  return _c("tr", [
+                    _c("td", { staticClass: "has-text-right" }, [
+                      _vm._v(_vm._s(bazaar.quantity))
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "has-text-right" }, [
+                      _vm._v(_vm._s(_vm._f("currency")(bazaar.cost)))
+                    ])
+                  ])
+                })
+              ),
+              _vm._v(" "),
+              _c(
+                "table",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.showBazaar === false,
+                      expression: "showBazaar === false"
+                    }
+                  ],
+                  staticClass: "table is-hoverable is-striped is-fullwidth"
+                },
+                _vm._l(_vm.marketItems, function(itemmarket) {
+                  return _c("tr", [
+                    _c("td", { staticClass: "has-text-right" }, [
+                      _vm._v(_vm._s(itemmarket.quantity))
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "has-text-right" }, [
+                      _vm._v(_vm._s(_vm._f("currency")(itemmarket.cost)))
+                    ])
+                  ])
+                })
+              )
+            ])
+          : _c("div", { staticClass: "columns" }, [_vm._m(0)])
       ])
     ])
   ])
@@ -14629,10 +14787,11 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "media-content" }, [
-      _c("p", { staticClass: "title is-4" }, [_vm._v("John Smith")]),
-      _vm._v(" "),
-      _c("p", { staticClass: "subtitle is-6" }, [_vm._v("@johnsmith")])
+    return _c("div", { staticClass: "column has-text-centered" }, [
+      _c("i", {
+        staticClass: "fa fa-spinner fa-spin",
+        attrs: { "aria-hidden": "true" }
+      })
     ])
   }
 ]
